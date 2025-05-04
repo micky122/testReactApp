@@ -14,23 +14,6 @@ function App() {
   const [pwd, setPwd] = useState("");
   const [login, setLogin] = useState("");
 
-  const handleLabelChange = (e) => {
-    setLabel(e.target.value);  
-    console.log(label);
-  };
-
-  const handleLoginChange = (e) => {
-    setLogin(e.target.value);  
-  };
-
-  const handlePwdChange = (e) => {
-    setPwd(e.target.value);  
-  };
-
-  const handleTypeChange = () => {
-    setType(!type);
-  };
-
   const HandleAddAccount = () => {
     
     const newAccount = {
@@ -72,36 +55,37 @@ function App() {
             <div className="row" key={idx}>
               <div className="col-md-2">
                 <InputText label="Label" onChange={(e)=>{
-                         const newAccounts = [...accounts];
-                         newAccounts[idx].label = e.target.value;
-                         setAccounts(newAccounts);
-                }} value={account.label} />
-              </div>
-              <div className="col-md-3">
-                <InputSelect label="Record Type" onChange={(e)=>{
-                         const newAccounts = [...accounts];
-                         newAccounts[idx].type = e.target.value;
-                         setAccounts(newAccounts);
-                }} value={account.type}  options={['Local', 'External']} />
-              </div>
-              <div className={!type ? 'col-md-3' : 'col-md-6'}>
-                <InputText label="Login" value={account.login} onChange={(e)=>{
-                  console.log(e.target.value);
                   const newAccounts = [...accounts];
                   newAccounts[idx].label = e.target.value;
                   setAccounts(newAccounts);
+                }} value={account.label} />
+              </div>
+              <div className="col-md-3">
+                <InputSelect label="Record Type" 
+                  onChange={(e)=>{
+                    const newAccounts = [...accounts];
+                    setType(!type);
+                    newAccounts[idx].type = e.target.value;
+                    setAccounts(newAccounts);
+                }} value={account.type}  options={['Local', 'External']} />
+              </div>
+              <div className={account.type==='Local' ? 'col-md-3' : 'col-md-6'}>
+                <InputText label="Login" value={account.login} onChange={(e)=>{
+                  const newAccounts = [...accounts];
+                  newAccounts[idx].login = e.target.value;
+                  setAccounts(newAccounts);
                 }}/>
               </div>
-              {!type ? (
+              {account.type ==='Local' ? (
                 <div className="col-md-3">
                   <InputPassword label="Password" value={account.password} onChange={(e)=>{
-                           const newAccounts = [...accounts];
-                           newAccounts[idx].password = e.target.value;
-                           setAccounts(newAccounts);
+                    const newAccounts = [...accounts];
+                    newAccounts[idx].password = e.target.value;
+                    setAccounts(newAccounts);
                   }}/>
                 </div>
               ) : (
-                <></>
+                null
               )}
               <div className="col-md-1">
                 <Button
