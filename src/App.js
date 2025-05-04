@@ -61,10 +61,12 @@ function App() {
                 }} value={account.label} />
               </div>
               <div className="col-md-3">
-                <InputSelect label="Record Type" onChange={(e)=>{
-                  const newAccounts = [...accounts];
-                  newAccounts[idx].type = e.target.value;
-                  setAccounts(newAccounts);
+                <InputSelect label="Record Type" 
+                  onChange={(e)=>{
+                    const newAccounts = [...accounts];
+                    setType(!type);
+                    newAccounts[idx].type = e.target.value;
+                    setAccounts(newAccounts);
                 }} value={account.type}  options={['Local', 'External']} />
               </div>
               <div className={!type ? 'col-md-3' : 'col-md-6'}>
@@ -75,7 +77,7 @@ function App() {
                   setAccounts(newAccounts);
                 }}/>
               </div>
-              {!type ? (
+              {account.type ==='Local' ? (
                 <div className="col-md-3">
                   <InputPassword label="Password" value={account.password} onChange={(e)=>{
                     const newAccounts = [...accounts];
@@ -84,7 +86,7 @@ function App() {
                   }}/>
                 </div>
               ) : (
-                <></>
+                null
               )}
               <div className="col-md-1">
                 <Button
