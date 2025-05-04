@@ -1,30 +1,30 @@
 import React from 'react'
 import './input.css';
 
-export const InputText = ({placeholder, value, label, onChange}) => {
+export const InputText = ({placeholder, value, label, onChange, className}) => {
   return (
     <>
       <label>{label}</label>
-      <input type='text' placeholder={placeholder} value={value} onChange={onChange}  style={{width: "100%"}}/>
+      <input type='text' className={className} placeholder={placeholder} value={value} onChange={onChange}  style={{width: "100%"}}/>
     </>
   )
 }
 
-export const InputPassword = ({label, value, onChange, children, type}) => {
+export const InputPassword = ({label, value, onChange, children, type, className}) => {
   return(
     <div className='input-container'>
       <label>{label}</label>
-      <input type={type} className='input-field' value={value} onChange={onChange} style={{width: "85%"}}/>
+      <input type={type} className={className} value={value} onChange={onChange} style={{width: "85%"}}/>
       {children}
     </div>
   )
 }
 
-export const InputSelect = ({onChange, label, options}) => {
+export const InputSelect = ({onChange, label, options, className}) => {
   return (
     <>
     <label><label>{label}</label></label>
-    <select style={{width: "100%"}} onChange={onChange}>
+    <select className={className} style={{width: "100%"}} onChange={onChange}>
       {options.map((option, idx) => (
         <option key={idx} value={option}>
           {option}
