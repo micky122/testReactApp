@@ -1,9 +1,6 @@
 import React from 'react'
 import './input.css';
 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye } from '@fortawesome/free-solid-svg-icons';
-import Button from './Button';
 export const InputText = ({placeholder, value, label, onChange}) => {
   return (
     <>
@@ -13,16 +10,12 @@ export const InputText = ({placeholder, value, label, onChange}) => {
   )
 }
 
-export const InputPassword = ({label, value, onChange}) => {
+export const InputPassword = ({label, value, onChange, children}) => {
   return(
     <div className='input-container'>
       <label>{label}</label>
       <input type="password" className='input-field' value={value} onChange={onChange} style={{width: "85%"}}/>
-      <Button className="btn btn-primary mt-3 trash-button icon" onClick={()=>{
-        alert("df")
-      }}>
-        <FontAwesomeIcon icon={faEye} />
-      </Button>
+      {children}
     </div>
   )
 }

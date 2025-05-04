@@ -5,7 +5,7 @@ import { InputText, InputPassword, InputSelect } from './components/Input';
 import Button from './components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [type, setType] = useState(false);
@@ -42,6 +42,10 @@ function App() {
       ]);
     }
   };
+
+  const handlePwdToggle = () => {
+    alert("Clicked!");
+  }
 
   return (
     <div className="App container">
@@ -82,7 +86,15 @@ function App() {
                     const newAccounts = [...accounts];
                     newAccounts[idx].password = e.target.value;
                     setAccounts(newAccounts);
-                  }}/>
+                  }}>
+                    <Button className="btn btn-primary mt-3 trash-button icon" 
+                      style={{zIndex:"100", position:"absolute", top:'15%', right:"1px", display:"inline-flex"
+                      }}
+                      onClick={handlePwdToggle}>
+                      <FontAwesomeIcon icon={faEye} />
+                    </Button>
+                  </InputPassword>
+
                 </div>
               ) : (
                 null
@@ -90,7 +102,6 @@ function App() {
               <div className="col-md-1">
                 <Button
                   className="btn btn-danger mt-3 trash-button"
-                  style={{ display: 'inlineFlex' }}
                   onClick={() => handleDeleteAccount(idx)}  // Pass index to delete
                 >
                   <FontAwesomeIcon icon={faTrash} />
