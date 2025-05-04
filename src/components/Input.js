@@ -10,11 +10,11 @@ export const InputText = ({placeholder, value, label, onChange}) => {
   )
 }
 
-export const InputPassword = ({label, value, onChange, children}) => {
+export const InputPassword = ({label, value, onChange, children, type}) => {
   return(
     <div className='input-container'>
       <label>{label}</label>
-      <input type="password" className='input-field' value={value} onChange={onChange} style={{width: "85%"}}/>
+      <input type={type} className='input-field' value={value} onChange={onChange} style={{width: "85%"}}/>
       {children}
     </div>
   )

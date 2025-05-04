@@ -5,15 +5,16 @@ import { InputText, InputPassword, InputSelect } from './components/Input';
 import Button from './components/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [type, setType] = useState(false);
   const [accounts, setAccounts] = useState([]);
   const [label, setLabel] = useState("");
   const [pwd, setPwd] = useState("");
-  const [login, setLogin] = useState("");
-
+  const [login, setLogin] = useState(""); 
+  const [showPwd, setShowPwd] = useState(false);
+  
   const HandleAddAccount = () => {
     
     const newAccount = {
@@ -21,12 +22,14 @@ function App() {
       type: 'Local',
       login,
       password: pwd,
+      showPwd
     };
 
     setAccounts((prevAccounts) => [...prevAccounts, newAccount]);
     setLabel('');  // Clear the input field
     setLogin('');  // Clear the input field
     setPwd('');    // Clear the input field
+    setShowPwd(false);    // Clear the input field
   };
 
   useEffect(() => {
@@ -43,8 +46,16 @@ function App() {
     }
   };
 
-  const handlePwdToggle = () => {
-    alert("Clicked!");
+  const handlePwdToggle = (index) => {
+    const newAccounts = [...accounts];
+    newAccounts[index].showPwd = !newAccounts[index].showPwd;
+    setAccounts(newAccounts);
+  }
+
+  const handleInputChange = (e, index) => {
+    const newAccounts = [...accounts];
+    newAccounts[index].password = e.target.value;
+    setAccounts(newAccounts);
   }
 
   return (
@@ -82,16 +93,14 @@ function App() {
               </div>
               {account.type ==='Local' ? (
                 <div className="col-md-3">
-                  <InputPassword label="Password" value={account.password} onChange={(e)=>{
-                    const newAccounts = [...accounts];
-                    newAccounts[idx].password = e.target.value;
-                    setAccounts(newAccounts);
-                  }}>
+                  <InputPassword label="Password" value={account.password}
+                    type={account.showPwd ? 'text' : 'password'}
+                     onChange={(e) => handleInputChange(e, idx)}>
                     <Button className="btn btn-primary mt-3 trash-button icon" 
                       style={{zIndex:"100", position:"absolute", top:'15%', right:"1px", display:"inline-flex"
                       }}
-                      onClick={handlePwdToggle}>
-                      <FontAwesomeIcon icon={faEye} />
+                      onClick={()=>handlePwdToggle(idx)}>
+                      <FontAwesomeIcon icon={account.showPwd?faEyeSlash:faEye} />
                     </Button>
                   </InputPassword>
 
