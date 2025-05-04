@@ -69,9 +69,8 @@ function App() {
                     setAccounts(newAccounts);
                 }} value={account.type}  options={['Local', 'External']} />
               </div>
-              <div className={!type ? 'col-md-3' : 'col-md-6'}>
+              <div className={account.type==='Local' ? 'col-md-3' : 'col-md-6'}>
                 <InputText label="Login" value={account.login} onChange={(e)=>{
-                  console.log(e.target.value);
                   const newAccounts = [...accounts];
                   newAccounts[idx].login = e.target.value;
                   setAccounts(newAccounts);
