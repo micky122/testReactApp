@@ -20,37 +20,71 @@ function App() {
   const [pwd, setPwd] = useState("");
   const [login, setLogin] = useState(""); 
   const [showPwd, setShowPwd] = useState(false);
-  // const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({});
 
-  const HandleAddAccount = () => {
+  const HandleAddAccount = (idx) => {
  
-    // const newErrors = {};
+    if(accounts.length===0) {
+      const newAccount = {
+        label,
+        type: 'Local',
+        login,
+        password: pwd,
+        showPwd
+      };
+      
+      setAccounts((prevAccounts) => [...prevAccounts, newAccount]);
+      setLabel('');  // Clear the input field
+      setLogin('');  // Clear the input field
+      setPwd('');    // Clear the input field
+      setShowPwd(false);    // Clear the input field
+  
+    } else {
+      const newErrors = {};
+      accounts.forEach((acc, idx) => {
+        if (acc.label.trim() === '') {
+          newErrors[`label-${idx}`] = "Label is required.";
+        }
+        if (acc.login.trim() === '') {
+          newErrors[`login-${idx}`] = "Login is required.";
+        }
+        if (acc.type === 'Local' && acc.password.trim() === '') {
+          newErrors[`password-${idx}`] = "Password is required.";
+        }
+      });
 
-    // if (label.trim() === '') {newErrors.label = "Label is required."; setErrors(newErrors)}
-    // else if (login.trim() === '') {newErrors.login = "Login is required."; setErrors(newErrors)}
-    // else if (type === false && pwd === '') {newErrors.password = "Password is required for Local accounts.";setErrors(newErrors)}
-    // else {
-    // if (Object.keys(newErrors).length > 0) {
-    //   console.log(Object.keys(newErrors).length)
-    //   console.log("Validation failed", newErrors); // 👈 Test this
-    //   setErrors(newErrors);
-    //   return;
-    // }
-    // setErrors({});
-    const newAccount = {
-      label,
-      type: 'Local',
-      login,
-      password: pwd,
-      showPwd
-    };
+      
+      const lastIndex = accounts.length - 1;
+      if (accounts[lastIndex].label !== '') setErrors({})
+      if (accounts[lastIndex].login !== '') setErrors({})
+      if (accounts[lastIndex].type !== false && pwd === '') setErrors({})
+      // if (Object.keys(newErrors).length > 0) {
+      //   console.log(Object.keys(newErrors).length)
+      //   console.log("Validation failed", newErrors); // 👈 Test this
+      //   setErrors(newErrors);
+      //   return;
+      // }
+      if (Object.keys(newErrors).length > 0) {
+        setErrors(newErrors);
+        console.log("Validation failed", newErrors);
+        return;
+      }
+      const newAccount = {
+        label,
+        type: 'Local',
+        login,
+        password: pwd,
+        showPwd
+      };
+      
+      setAccounts((prevAccounts) => [...prevAccounts, newAccount]);
+      setLabel('');  // Clear the input field
+      setLogin('');  // Clear the input field
+      setPwd('');    // Clear the input field
+      setShowPwd(false);    // Clear the input field
+
+    }
     
-    setAccounts((prevAccounts) => [...prevAccounts, newAccount]);
-    setLabel('');  // Clear the input field
-    setLogin('');  // Clear the input field
-    setPwd('');    // Clear the input field
-    setShowPwd(false);    // Clear the input field
-
   };
   useEffect(() => {
     localStorage.setItem('accounts', JSON.stringify(accounts));
@@ -94,13 +128,15 @@ function App() {
             <div className="row" key={idx}>
               <div className="col-md-2">
                 <InputText label="Label" 
-                  // className={`form-control ${errors.label ? 'is-invalid' : ''}`}
-                  className="form-control"
+                  className={`form-control ${errors[`label-${idx}`] ? 'is-invalid' : ''}`}
                   onChange={(e)=>{
                   const newAccounts = [...accounts];
                   newAccounts[idx].label = e.target.value;
                   setAccounts(newAccounts);
                 }} value={account.label} />
+                {errors[`label-${idx}`] && (
+                  <div className="invalid-feedback">{errors[`label-${idx}`]}</div>
+                )}
               </div>
               <div className="col-md-3">
                 <InputSelect label="Record Type" 
@@ -114,36 +150,42 @@ function App() {
               </div>
               <div className={account.type==='Local' ? 'col-md-3' : 'col-md-6'}>
                 <InputText label="Login" 
-                  // className={`form-control ${errors.login ? 'is-invalid' : ''}`}
-                  className="form-control"
+                  className={`form-control ${errors[`login-${idx}`] ? 'is-invalid' : ''}`}
                   value={account.login} onChange={(e)=>{
                   const newAccounts = [...accounts];
                   newAccounts[idx].login = e.target.value;
                   setAccounts(newAccounts);
                 }}/>
+                {errors[`login-${idx}`] && (
+                  <div className="invalid-feedback">{errors[`login-${idx}`]}</div>
+                )}
               </div>
               {account.type ==='Local' ? (
                 <div className="col-md-3">
-                  <InputPassword label="Password" value={account.password}
-                    // className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                    className="form-control"
-                      type={account.showPwd ? 'text' : 'password'}
-                     onChange={(e) => handleInputChange(e, idx)}>
+                  <div className="position-relative">
+                  <InputPassword label="Password" 
+                    className={`form-control ${errors[`password-${idx}`] ? 'is-invalid' : ''}`}
+                    value={account.password}
+                    type={account.showPwd ? 'text' : 'password'}
+                    onChange={(e) => handleInputChange(e, idx)}>
                     <Button className="btn btn-primary mt-3 trash-button icon" 
-                      style={{zIndex:"100", position:"absolute", top:'13%', right:"0px"
+                      style={{zIndex:"100", position:"absolute", top:'13%', right:"10px"
                       }}
                       onClick={()=>handlePwdToggle(idx)}>
                       <FontAwesomeIcon icon={account.showPwd?faEyeSlash:faEye} />
                     </Button>
                   </InputPassword>
-
+                  {errors[`password-${idx}`] && (
+                    <div className="invalid-feedback" style={{display:'block'}}>{errors[`password-${idx}`]}</div>
+                  )}
+                </div>
                 </div>
               ) : (
                 null
               )}
               <div className="col-md-1">
                 <Button
-                  style={{marginTop:"43%"}}
+                  style={{marginTop:"23px"}}
                   className="btn btn-danger trash-button"
                   onClick={() => handleDeleteAccount(idx)}  // Pass index to delete
                 >
